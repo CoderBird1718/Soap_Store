@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<!--
+  CHECKOUT.HTML — Checkout Page
+  ================================
+  Multi-step checkout form with 3 steps:
+  Step 1: Shipping Information
+  Step 2: Payment Method  
+  Step 3: Review & Place Order
+  
+  A progress bar shows which step you're on.
+  JavaScript handles transitions between steps and validation.
+  On final submission, cart is cleared and success modal shows.
+  
+  NOTE: This is a FRONTEND simulation only.
+  In real life, Step 2 would connect to a payment gateway
+  like Razorpay, Stripe, or PayU for actual processing.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — LatherLux</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhance.css">
+</head>
+<body>
+
+<div class="bubble-bg" aria-hidden="true"></div>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">🫧</div>
+      LatherLux
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="nav-icon-btn">🛒<span class="cart-count" style="display:none">0</span></a>
+      <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu">
+  <a href="index.html">🏠 Home</a>
+  <a href="products.html">🧼 Products</a>
+  <a href="cart.html">🛒 Cart</a>
+</div>
+
+<div class="page-hero" style="position:relative;z-index:1;">
+  <h1>Secure Checkout 🔒</h1>
+  <p>Complete your order in just a few steps</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     CHECKOUT LAYOUT: Form (left) + Order Summary (right)
+     ═══════════════════════════════════════════════════ -->
+<div class="checkout-layout">
+  
+  <!-- LEFT: Multi-step form -->
+  <div>
+    <!-- PROGRESS BAR: Visual indicator of checkout steps -->
+    <!-- Step circles turn green (done) and pink (active) via JS -->
+    <div class="progress-steps">
+      <div class="step active">
+        <div class="step-num">1</div>
+        <div class="step-label">Shipping</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-label">Payment</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-label">Review</div>
+      </div>
+    </div>
+    
+    <!-- ─── STEP 1: SHIPPING INFORMATION ─────────────────────
+         All fields have id attributes so JS can read their values.
+         The form-grid creates a 2-column layout for fields.
+    ──────────────────────────────────────────────────────── -->
+    <div class="checkout-step" data-step="1">
+      <div class="form-section">
+        <h3>📍 Shipping Information</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="shippingName">Full Name *</label>
+            <input type="text" id="shippingName" placeholder="e.g. Priya Sharma">
+          </div>
+          <div class="form-group">
+            <label for="shippingPhone">Phone Number *</label>
+            <input type="tel" id="shippingPhone" placeholder="+91 98765 43210">
+          </div>
+          <div class="form-group">
+            <label for="shippingEmail">Email Address</label>
+            <input type="email" id="shippingEmail" placeholder="priya@example.com">
+          </div>
+          <div class="form-group">
+            <label for="shippingPincode">PIN Code *</label>
+            <input type="text" id="shippingPin" placeholder="400001" maxlength="6">
+          </div>
+          <div class="form-group span2">
+            <label for="shippingAddress">Street Address *</label>
+            <input type="text" id="shippingAddress" placeholder="House/Flat number, Street, Colony">
+          </div>
+          <div class="form-group">
+            <label for="shippingCity">City *</label>
+            <input type="text" id="shippingCity" placeholder="Mumbai">
+          </div>
+          <div class="form-group">
+            <label for="shippingState">State *</label>
+            <select id="shippingState">
+              <option value="">Select State</option>
+              <option>Maharashtra</option>
+              <option>Delhi</option>
+              <option>Karnataka</option>
+              <option>Tamil Nadu</option>
+              <option>Gujarat</option>
+              <option>Rajasthan</option>
+              <option>Uttar Pradesh</option>
+              <option>West Bengal</option>
+              <option>Telangana</option>
+              <option>Kerala</option>
+              <option>Punjab</option>
+              <option>Madhya Pradesh</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group span2">
+            <label for="shippingNote">Delivery Note (Optional)</label>
+            <textarea id="shippingNote" placeholder="Any special delivery instructions..."></textarea>
+          </div>
+        </div>
+      </div>
+      
+      <div style="display:flex;justify-content:flex-end;">
+        <button class="btn btn-primary" onclick="nextStep()">Continue to Payment →</button>
+      </div>
+    </div>
+    
+    <!-- ─── STEP 2: PAYMENT METHOD ────────────────────────────
+         Payment options with radio-style selection.
+         selectPayment() in cart.js handles the active state.
+         Card fields appear/disappear based on selection.
+    ──────────────────────────────────────────────────────── -->
+    <div class="checkout-step" data-step="2" style="display:none;">
+      <div class="form-section">
+        <h3>💳 Payment Method</h3>
+        <p style="font-size:0.85rem;margin-bottom:20px;">All transactions are 100% secure and encrypted</p>
+        
+        <div class="payment-options">
+          <!-- UPI Payment -->
+          <div class="payment-option selected" onclick="selectPayment(this, 'upi')">
+            <input type="radio" name="payment" value="upi" checked>
+            <div class="payment-icon-large">📱</div>
+            <div class="payment-text">
+              <h5>UPI / PhonePe / GPay</h5>
+              <p>Pay instantly using UPI ID or QR code</p>
+            </div>
+          </div>
+          
+          <!-- Credit/Debit Card -->
+          <div class="payment-option" onclick="selectPayment(this, 'card')">
+            <input type="radio" name="payment" value="card">
+            <div class="payment-icon-large">💳</div>
+            <div class="payment-text">
+              <h5>Credit / Debit Card</h5>
+              <p>Visa, Mastercard, RuPay accepted</p>
+            </div>
+          </div>
+          
+          <!-- Card fields: shown only when "card" is selected -->
+          <div id="cardFields" style="display:none;margin-left:20px;margin-top:-8px;">
+            <div class="card-fields">
+              <div class="form-group">
+                <label>Card Number</label>
+                <input type="text" placeholder="1234 5678 9012 3456" maxlength="19"
+                       oninput="formatCardNumber(this)">
+              </div>
+              <div class="form-group">
+                <label>Name on Card</label>
+                <input type="text" placeholder="PRIYA SHARMA">
+              </div>
+              <div class="form-group">
+                <label>Expiry Date</label>
+                <input type="text" placeholder="MM/YY" maxlength="5">
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="password" placeholder="•••" maxlength="3">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Net Banking -->
+          <div class="payment-option" onclick="selectPayment(this, 'netbanking')">
+            <input type="radio" name="payment" value="netbanking">
+            <div class="payment-icon-large">🏦</div>
+            <div class="payment-text">
+              <h5>Net Banking</h5>
+              <p>Pay directly from your bank account</p>
+            </div>
+          </div>
+          
+          <!-- Cash on Delivery -->
+          <div class="payment-option" onclick="selectPayment(this, 'cod')">
+            <input type="radio" name="payment" value="cod">
+            <div class="payment-icon-large">💰</div>
+            <div class="payment-text">
+              <h5>Cash on Delivery</h5>
+              <p>Pay when your order arrives (₹25 extra charge)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Notice: simulation only, no real payment -->
+      <div style="background:linear-gradient(135deg,#fff9e6,#fff3cc);border:1px solid #e6c200;border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:0.83rem;color:#7a5800;">
+        ⚠️ <strong>Demo Only:</strong> This is a simulated checkout. No real payment will be processed. Use any test values in the card fields.
+      </div>
+      
+      <div style="display:flex;justify-content:space-between;gap:12px;">
+        <button class="btn btn-outline" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Review Order →</button>
+      </div>
+    </div>
+    
+    <!-- ─── STEP 3: REVIEW & CONFIRM ──────────────────────────
+         Shows summary of shipping address and payment method.
+         populateReviewStep() in cart.js fills these values.
+    ──────────────────────────────────────────────────────── -->
+    <div class="checkout-step" data-step="3" style="display:none;">
+      <div class="form-section">
+        <h3>📋 Review Your Order</h3>
+        
+        <div style="display:grid;gap:16px;">
+          <!-- Delivery address summary -->
+          <div style="background:var(--cream);border-radius:12px;padding:16px;">
+            <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-light);margin-bottom:8px;">
+              📍 Delivering To
+            </div>
+            <div id="reviewAddress" style="font-size:0.9rem;line-height:1.6;"></div>
+          </div>
+          
+          <!-- Payment method summary -->
+          <div style="background:var(--cream);border-radius:12px;padding:16px;">
+            <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-light);margin-bottom:8px;">
+              💳 Payment Method
+            </div>
+            <div id="reviewPayment" style="font-size:0.9rem;font-weight:500;"></div>
+          </div>
+          
+          <!-- Estimated delivery -->
+          <div style="background:linear-gradient(135deg,var(--blush),var(--lavender));border-radius:12px;padding:16px;text-align:center;">
+            <div style="font-size:0.8rem;margin-bottom:4px;color:var(--charcoal)">🚚 Estimated Delivery</div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--charcoal);" id="deliveryDate"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Terms acceptance -->
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:20px;padding:14px;background:var(--warm-white);border-radius:10px;border:1.5px solid var(--border);">
+        <input type="checkbox" id="termsCheck" style="margin-top:3px;accent-color:var(--rose);width:16px;height:16px;flex-shrink:0;">
+        <label for="termsCheck" style="font-size:0.82rem;color:var(--text-mid);cursor:pointer;">
+          I agree to the <strong>Terms of Service</strong> and <strong>Privacy Policy</strong>. I confirm that my delivery address is correct.
+        </label>
+      </div>
+      
+      <div style="display:flex;justify-content:space-between;gap:12px;">
+        <button class="btn btn-outline" onclick="prevStep()">← Back</button>
+        <button class="btn btn-gold" id="placeOrderBtn" onclick="handlePlaceOrder()" style="flex:1;justify-content:center;padding:16px;">
+          🎉 Place Order
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- RIGHT SIDE: Order Summary Sidebar -->
+  <div>
+    <div class="order-summary">
+      <h3>🛒 Your Order</h3>
+      
+      <!-- Mini cart items: rendered by renderCheckoutMiniCart() in cart.js -->
+      <div id="checkoutMiniCart">
+        <div class="spinner"></div>
+      </div>
+      
+      <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
+      
+      <!-- Price breakdown -->
+      <div class="summary-row"><span>Subtotal</span><span id="chkSubtotal">₹0</span></div>
+      <div class="summary-row"><span>Delivery</span><span id="chkDelivery">₹60</span></div>
+      <div class="summary-row total"><span>Total</span><span id="chkTotal">₹0</span></div>
+      
+      <!-- Security badge -->
+      <div style="display:flex;align-items:center;gap:8px;margin-top:20px;background:var(--cream);border-radius:10px;padding:12px;font-size:0.8rem;color:var(--text-mid);">
+        🔒 Secure 256-bit SSL Encrypted Checkout
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding:24px 0 0;">
+      <p>© 2025 LatherLux. Made with 💛 in India.</p>
+      <a href="cart.html" class="btn btn-outline" style="padding:8px 20px;font-size:0.85rem;">← Back to Cart</a>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script src="cart.js"></script>
+<script>
+  /**
+   * handlePlaceOrder() — Final validation before placing order
+   * Checks if user has accepted terms, then calls placeOrder()
+   */
+  function handlePlaceOrder() {
+    if (!document.getElementById('termsCheck').checked) {
+      showToast('⚠️ Please accept the Terms of Service to continue');
+      return;
+    }
+    placeOrder(); // Defined in cart.js
+  }
+  
+  /**
+   * formatCardNumber() — Auto-formats card number as user types
+   * Adds spaces every 4 digits: 1234567890123456 → 1234 5678 9012 3456
+   */
+  function formatCardNumber(input) {
+    let value = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+    let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+    input.value = formatted;
+  }
+  
+  /**
+   * Calculate estimated delivery date (3-5 business days from today)
+   */
+  function setDeliveryDate() {
+    const el = document.getElementById('deliveryDate');
+    if (!el) return;
+    const today = new Date();
+    today.setDate(today.getDate() + 4); // Add 4 days
+    const options = { weekday: 'long', month: 'long', day: 'numeric' };
+    el.textContent = today.toLocaleDateString('en-IN', options);
+  }
+  
+  setDeliveryDate();
+</script>
+<script src="enhance.js"></script>
+</body>
+</html>

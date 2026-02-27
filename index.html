@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<!--
+  INDEX.HTML — Home Page
+  =====================
+  This is the LANDING PAGE that visitors see first.
+  Structure:
+  1. <head> — metadata, font imports, CSS link
+  2. Bubble background (animated CSS circles)
+  3. Navbar — navigation bar at top
+  4. Mobile menu — hidden on desktop, slides in on mobile
+  5. Hero section — big headline + floating soap visuals
+  6. Features strip — 4 trust-building icons
+  7. Categories section — category filter pills
+  8. Products section — featured product grid
+  9. Testimonials — customer reviews
+  10. Newsletter — email signup
+  11. Footer
+  12. Back to top button
+  13. <script> tags — load JS files at end of body
+  
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🫧LatherLux — Handmade Soap Store</title>
+  <meta name="description" content="Handcrafted artisan soaps made with natural ingredients. Herbal, Charcoal, Rose, Lavender & Coffee soaps.">
+  <!-- Google Fonts: Playfair Display for headings, Lato for body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhance.css">
+</head>
+<body>
+
+<!-- BUBBLE BACKGROUND: Absolutely positioned container for floating bubbles.
+     JavaScript (createBubbles() in script.js) will add bubble divs here. -->
+<div class="bubble-bg" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════════
+     NAVBAR
+     Uses position:sticky so it stays at top while scrolling.
+     Contains: Logo | Nav links | Search | Cart icon | Hamburger
+     ═══════════════════════════════════════════════════ -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <!-- Logo: clicking takes user to home page -->
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">🫧</div>
+      🫧LatherLux
+    </a>
+    
+    <!-- Desktop navigation links. Hidden on mobile. -->
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    
+    <!-- Right side actions: search + cart + hamburger -->
+    <div class="nav-actions">
+      <!-- Search bar — pressing Enter redirects to products.html?search=... -->
+      <div class="nav-search-bar">
+        <span>🔍</span>
+        <input type="text" placeholder="Search soaps...">
+      </div>
+      <!-- Cart icon with badge showing item count -->
+      <a href="cart.html" class="nav-icon-btn">
+        🛒
+        <span class="cart-count" style="display:none">0</span>
+      </a>
+      <!-- Hamburger: 3 horizontal lines, visible only on mobile -->
+      <button class="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile dropdown menu. Toggled by hamburger button click via JS -->
+<div class="mobile-menu">
+  <a href="index.html">🏠 Home</a>
+  <a href="products.html">🧼 Products</a>
+  <a href="about.html">💡 About Us</a>
+  <a href="contact.html">📬 Contact</a>
+  <a href="cart.html">🛒 Cart</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     HERO SECTION
+     Full-height welcome section with headline and floating
+     3D soap card visuals. Two-column CSS Grid layout.
+     ═══════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="eyebrow">✨ Handcrafted with Love</div>
+    <h1>Soap That's<br><span>Pure Nature</span>,<br>Pure You.</h1>
+    <p>Artisan soaps made from the finest natural ingredients. Pamper your skin with our collection of herbal, charcoal, rose, lavender, and coffee bars.</p>
+    <div class="hero-cta">
+      <a href="products.html" class="btn btn-primary">🛍 Shop Now</a>
+      <a href="about.html" class="btn btn-outline">Learn Our Story</a>
+    </div>
+    <!-- Stats bar: social proof numbers -->
+    <div class="hero-stats">
+      <div class="stat-item"><h4>12+</h4><p>Handmade Varieties</p></div>
+      <div class="stat-item"><h4>5k+</h4><p>Happy Customers</p></div>
+      <div class="stat-item"><h4>100%</h4><p>Natural Ingredients</p></div>
+    </div>
+  </div>
+  
+  <!-- Right side: floating animated soap bars (pure CSS) -->
+  <div class="hero-visual">
+    <div class="hero-soap-stack">
+      <div class="soap-card-3d">🌹</div>
+      <div class="soap-card-3d">💜</div>
+      <div class="soap-card-3d">🌿</div>
+      <div class="soap-card-3d">☕</div>
+      <div class="hero-bubble"></div>
+      <div class="hero-bubble"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     FEATURES STRIP (TRUST BUILDERS)
+     Dark background strip showing key selling points.
+     4-column grid that collapses to 2 on tablet.
+     ═══════════════════════════════════════════════════ -->
+<section class="features-strip">
+  <div class="container">
+    <div class="features-grid">
+      <div class="feature-item fade-in">
+        <div class="icon">🚚</div>
+        <h4>Free Delivery</h4>
+        <p>On orders above ₹500</p>
+      </div>
+      <div class="feature-item fade-in fade-in-delay-1">
+        <div class="icon">🌿</div>
+        <h4>100% Natural</h4>
+        <p>No harsh chemicals</p>
+      </div>
+      <div class="feature-item fade-in fade-in-delay-2">
+        <div class="icon">✋</div>
+        <h4>Handmade</h4>
+        <p>Small batch crafted</p>
+      </div>
+      <div class="feature-item fade-in fade-in-delay-3">
+        <div class="icon">↩️</div>
+        <h4>Easy Returns</h4>
+        <p>7-day return policy</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     CATEGORIES SECTION
+     Horizontally scrollable category pills.
+     Clicking one filters products (in products.html these 
+     work as actual filters. Here they just link to the page).
+     ═══════════════════════════════════════════════════ -->
+<section class="categories-section">
+  <div class="container">
+    <div class="section-title fade-in">
+      <h2>Shop by Category</h2>
+      <p>Discover our handpicked collection of natural soaps</p>
+      <div class="title-line"></div>
+    </div>
+    <div class="category-scroll">
+      <a href="products.html" class="cat-pill fade-in">
+        <span class="cat-icon">🌸</span>
+        <span class="cat-name">All Soaps</span>
+        <span class="cat-count">12 products</span>
+      </a>
+      <a href="products.html?cat=herbal" class="cat-pill fade-in fade-in-delay-1">
+        <span class="cat-icon">🌿</span>
+        <span class="cat-name">Herbal</span>
+        <span class="cat-count">3 products</span>
+      </a>
+      <a href="products.html?cat=charcoal" class="cat-pill fade-in fade-in-delay-2">
+        <span class="cat-icon">🖤</span>
+        <span class="cat-name">Charcoal</span>
+        <span class="cat-count">2 products</span>
+      </a>
+      <a href="products.html?cat=rose" class="cat-pill fade-in fade-in-delay-3">
+        <span class="cat-icon">🌹</span>
+        <span class="cat-name">Rose</span>
+        <span class="cat-count">3 products</span>
+      </a>
+      <a href="products.html?cat=lavender" class="cat-pill fade-in fade-in-delay-4">
+        <span class="cat-icon">💜</span>
+        <span class="cat-name">Lavender</span>
+        <span class="cat-count">2 products</span>
+      </a>
+      <a href="products.html?cat=coffee" class="cat-pill fade-in">
+        <span class="cat-icon">☕</span>
+        <span class="cat-name">Coffee</span>
+        <span class="cat-count">2 products</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     FEATURED PRODUCTS SECTION
+     JavaScript renders product cards into #featuredProducts div.
+     See the <script> at bottom where we call renderFeatured().
+     ═══════════════════════════════════════════════════ -->
+<section class="products-section">
+  <div class="container">
+    <div class="section-title fade-in">
+      <h2>Bestselling Soaps</h2>
+      <p>Our most loved handmade creations, trusted by thousands of happy customers</p>
+      <div class="title-line"></div>
+    </div>
+    <div id="featuredProducts" class="products-grid">
+      <!-- Product cards inserted here by JavaScript -->
+      <div class="spinner"></div>
+    </div>
+    <div style="text-align:center; margin-top:40px;">
+      <a href="products.html" class="btn btn-outline">View All Products →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     TESTIMONIALS
+     3 customer review cards.
+     ═══════════════════════════════════════════════════ -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-title fade-in">
+      <h2>What Our Customers Say</h2>
+      <p>Real reviews from people who love LatherLux soaps</p>
+      <div class="title-line"></div>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card fade-in">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">The Rose Garden Bliss soap transformed my daily shower routine. My skin feels incredibly soft and the fragrance is divine! Will definitely reorder.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">👩</div>
+          <div>
+            <div class="author-name">Priya Sharma</div>
+            <div class="author-location">Mumbai</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-in fade-in-delay-1">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">Finally found a charcoal soap that doesn't dry out my skin! The Midnight Charcoal Mint is perfect for my oily skin. The mint tingle is refreshing!</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">👨</div>
+          <div>
+            <div class="author-name">Rahul Verma</div>
+            <div class="author-location">Delhi</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-in fade-in-delay-2">
+        <div class="testimonial-stars">★★★★⭐</div>
+        <p class="testimonial-text">I ordered the Lavender Dreams for my mom and she absolutely loved it! The packaging was beautiful and delivery was super fast. Great quality for the price.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">👩‍🦱</div>
+          <div>
+            <div class="author-name">Ananya Iyer</div>
+            <div class="author-location">Bangalore</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     NEWSLETTER SIGNUP
+     Gradient background section with email form.
+     Form submission is handled by a JS function.
+     ═══════════════════════════════════════════════════ -->
+<section class="newsletter-section">
+  <div>
+    <h2>Get 10% Off Your First Order!</h2>
+    <p>Subscribe to our newsletter for exclusive deals, new launches, and skincare tips.</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="Enter your email address" id="newsletterEmail">
+      <button class="btn btn-dark" onclick="subscribeNewsletter()">Subscribe</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     FOOTER
+     4-column grid with: Brand info | Quick Links | Categories | Contact
+     ═══════════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">🫧 LatherLux</div>
+        <p>Crafting pure, handmade soaps with love since 2020. Our commitment to natural ingredients and artisan quality sets us apart.</p>
+        <div class="social-links">
+          <a href="#" class="social-btn">📘</a>
+          <a href="#" class="social-btn">📷</a>
+          <a href="#" class="social-btn">🐦</a>
+          <a href="#" class="social-btn">▶️</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Quick Links</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="products.html">All Products</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="cart.html">My Cart</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Categories</h5>
+        <ul>
+          <li><a href="products.html?cat=herbal">🌿 Herbal Soaps</a></li>
+          <li><a href="products.html?cat=charcoal">🖤 Charcoal Soaps</a></li>
+          <li><a href="products.html?cat=rose">🌹 Rose Soaps</a></li>
+          <li><a href="products.html?cat=lavender">💜 Lavender Soaps</a></li>
+          <li><a href="products.html?cat=coffee">☕ Coffee Soaps</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contact Us</h5>
+        <div class="footer-contact-item">
+          <span class="icon">📍</span>
+          <span>42 Soap Lane, Mumbai, Maharashtra 400001</span>
+        </div>
+        <div class="footer-contact-item">
+          <span class="icon">📞</span>
+          <span>+91 98765 43210</span>
+        </div>
+        <div class="footer-contact-item">
+          <span class="icon">✉️</span>
+          <span>hello@latherlux.in</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 LatherLux. Made with 💛 in India. All rights reserved.</p>
+      <div class="payment-icons">
+        <span class="payment-icon">UPI</span>
+        <span class="payment-icon">VISA</span>
+        <span class="payment-icon">MC</span>
+        <span class="payment-icon">COD</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to top floating button -->
+<button class="back-to-top" title="Back to top">↑</button>
+
+<!-- ═══════════════════════════════════════════════════
+     JAVASCRIPT LOADING ORDER MATTERS!
+     1. script.js — loads PRODUCTS data and core functions
+     2. cart.js — loads cart-specific functions
+     3. Inline script — page-specific initialization
+     ═══════════════════════════════════════════════════ -->
+<script src="script.js"></script>
+<script src="cart.js"></script>
+<script>
+  /**
+   * renderFeatured() — Renders bestselling products on home page
+   * Filters PRODUCTS array for isBestseller:true, takes first 8.
+   * Uses createProductCard() from script.js to generate HTML.
+   * 
+   * .filter() returns a new array with items that match condition
+   * .slice(0, 8) takes first 8 items from the filtered array
+   * .map() transforms each product into an HTML string
+   * .join('') merges all HTML strings into one
+   */
+  function renderFeatured() {
+    const container = document.getElementById('featuredProducts');
+    if (!container) return;
+    
+    // Show bestsellers first, then fill with others up to 8 total
+    const bestsellers = PRODUCTS.filter(p => p.isBestseller);
+    const others = PRODUCTS.filter(p => !p.isBestseller);
+    const featured = [...bestsellers, ...others].slice(0, 8);
+    
+    container.innerHTML = featured.map(p => createProductCard(p)).join('');
+    
+    // Trigger scroll reveal for newly added cards
+    setTimeout(initScrollReveal, 50);
+  }
+  
+  function subscribeNewsletter() {
+    const email = document.getElementById('newsletterEmail').value;
+    if (!email || !email.includes('@')) {
+      showToast('⚠️ Please enter a valid email address');
+      return;
+    }
+    showToast(`🎉 Subscribed! Check your email for your 10% discount code.`);
+    document.getElementById('newsletterEmail').value = '';
+  }
+  
+  // Run when page loads
+  renderFeatured();
+</script>
+<script src="enhance.js"></script>
+</body>
+</html>

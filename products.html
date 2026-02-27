@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<!--
+  PRODUCTS.HTML — Product Listing Page
+  =====================================
+  This page shows ALL products with:
+  - Filter sidebar (by category, price range)
+  - Search bar at top
+  - Sort by (price, rating, name)
+  - Grid/list view toggle
+  - URL parameter detection (e.g., ?cat=rose or ?search=charcoal)
+  
+  KEY CONCEPT — URL PARAMETERS:
+  When you link to products.html?cat=rose, JavaScript reads
+  the "cat" parameter from the URL and pre-filters results.
+  This makes category links from home page work automatically.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products — LatherLux</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhance.css">
+</head>
+<body>
+
+<div class="bubble-bg" aria-hidden="true"></div>
+
+<!-- NAVBAR (same on every page) -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">🫧</div>
+      LatherLux
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html" class="active">Products</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <div class="nav-search-bar">
+        <span>🔍</span>
+        <input type="text" placeholder="Search soaps..." id="navSearchInput">
+      </div>
+      <a href="cart.html" class="nav-icon-btn">🛒<span class="cart-count" style="display:none">0</span></a>
+      <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu">
+  <a href="index.html">🏠 Home</a>
+  <a href="products.html">🧼 Products</a>
+  <a href="about.html">💡 About Us</a>
+  <a href="contact.html">📬 Contact</a>
+  <a href="cart.html">🛒 Cart</a>
+</div>
+
+<!-- PAGE HERO: Decorative header banner for products page -->
+<div class="page-hero" style="position:relative;z-index:1;">
+  <h1>Our Handmade Soaps</h1>
+  <p>Discover natural, artisan bars crafted with love</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PRODUCTS LAYOUT: Sidebar + Main Grid
+     CSS Grid: 260px sidebar | flexible main area
+     ═══════════════════════════════════════════════════ -->
+<div class="products-layout">
+  
+  <!-- LEFT: FILTER SIDEBAR -->
+  <aside class="filter-sidebar">
+    <h3>🔽 Filters</h3>
+    
+    <!-- Category filter checkboxes -->
+    <div class="filter-group">
+      <h4>Category</h4>
+      <label class="filter-option">
+        <input type="checkbox" value="all" id="catAll" onchange="filterByCategory('all', this)"> All Soaps
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" value="herbal" onchange="filterByCategory('herbal', this)"> 🌿 Herbal Soaps
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" value="charcoal" onchange="filterByCategory('charcoal', this)"> 🖤 Charcoal Soaps
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" value="rose" onchange="filterByCategory('rose', this)"> 🌹 Rose Soaps
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" value="lavender" onchange="filterByCategory('lavender', this)"> 💜 Lavender Soaps
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" value="coffee" onchange="filterByCategory('coffee', this)"> ☕ Coffee Soaps
+      </label>
+    </div>
+    
+    <!-- Price range slider -->
+    <div class="filter-group">
+      <h4>Price Range</h4>
+      <input type="range" class="price-range" id="priceRange" 
+             min="200" max="600" value="600" step="10"
+             oninput="filterByPrice(this.value)">
+      <div class="price-labels">
+        <span>₹200</span>
+        <span id="maxPriceLabel">₹600</span>
+      </div>
+    </div>
+    
+    <!-- Availability filter -->
+    <div class="filter-group">
+      <h4>Availability</h4>
+      <label class="filter-option">
+        <input type="checkbox" id="inStockOnly" onchange="applyAllFilters()"> In Stock Only
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" id="bestsellersOnly" onchange="applyAllFilters()"> Bestsellers Only
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" id="newOnly" onchange="applyAllFilters()"> New Arrivals
+      </label>
+    </div>
+    
+    <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:8px;" onclick="resetFilters()">
+      ↺ Reset Filters
+    </button>
+  </aside>
+  
+  <!-- RIGHT: MAIN PRODUCTS AREA -->
+  <main class="products-main">
+    <!-- Toolbar: count + sort + view toggle -->
+    <div class="products-toolbar">
+      <div class="products-count" id="productsCount">Showing 12 products</div>
+      <div class="toolbar-right">
+        <!-- Sort dropdown -->
+        <select class="sort-select" id="sortSelect" onchange="applyAllFilters()">
+          <option value="default">Sort: Default</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+          <option value="name">Name: A to Z</option>
+          <option value="discount">Highest Discount</option>
+        </select>
+        <!-- View toggle: Grid or List -->
+        <div class="view-toggle">
+          <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Grid view">⊞</button>
+          <button class="view-btn" id="listViewBtn" onclick="setView('list')" title="List view">☰</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Search bar (mobile / alternative to navbar search) -->
+    <div style="margin-bottom:20px;">
+      <div class="nav-search-bar" style="max-width:100%;border-radius:12px;padding:12px 18px;">
+        <span>🔍</span>
+        <input type="text" placeholder="Search soaps by name, ingredient, or fragrance..." 
+               id="searchInput" oninput="applyAllFilters()" style="width:100%">
+      </div>
+    </div>
+    
+    <!-- The grid where product cards are rendered by JS -->
+    <div id="productsGrid" class="products-grid">
+      <div class="spinner"></div>
+    </div>
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">🫧 LatherLux</div>
+        <p>Crafting pure, handmade soaps with love since 2020.</p>
+        <div class="social-links">
+          <a href="#" class="social-btn">📘</a>
+          <a href="#" class="social-btn">📷</a>
+          <a href="#" class="social-btn">🐦</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Quick Links</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="products.html">All Products</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Categories</h5>
+        <ul>
+          <li><a href="products.html?cat=herbal">🌿 Herbal</a></li>
+          <li><a href="products.html?cat=charcoal">🖤 Charcoal</a></li>
+          <li><a href="products.html?cat=rose">🌹 Rose</a></li>
+          <li><a href="products.html?cat=lavender">💜 Lavender</a></li>
+          <li><a href="products.html?cat=coffee">☕ Coffee</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <div class="footer-contact-item"><span class="icon">📞</span><span>+91 98765 43210</span></div>
+        <div class="footer-contact-item"><span class="icon">✉️</span><span>hello@latherlux.in</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 LatherLux. Made with 💛 in India.</p>
+    </div>
+  </div>
+</footer>
+
+<button class="back-to-top" title="Back to top">↑</button>
+
+<script src="script.js"></script>
+<script src="cart.js"></script>
+<script>
+
+let activeCategories = []; // Array of selected category strings
+let maxPrice = 600;         // Current max price from slider
+let currentView = 'grid';  // 'grid' or 'list'
+
+function applyAllFilters() {
+  let results = [...PRODUCTS]; // Start with ALL products (spread copies the array)
+  
+  // ── Step 1: Category filter ──────────────────────────────
+  if (activeCategories.length > 0 && !activeCategories.includes('all')) {
+    // Array.filter() keeps only items where category is in activeCategories
+    results = results.filter(p => activeCategories.includes(p.category));
+  }
+  
+  // ── Step 2: Price range filter ───────────────────────────
+  results = results.filter(p => p.price <= maxPrice);
+  
+  // ── Step 3: Search text filter ───────────────────────────
+  const searchText = (document.getElementById('searchInput')?.value || 
+                      document.getElementById('navSearchInput')?.value || '').toLowerCase().trim();
+  if (searchText) {
+    results = results.filter(p => 
+      p.name.toLowerCase().includes(searchText) ||
+      p.description.toLowerCase().includes(searchText) ||
+      p.category.toLowerCase().includes(searchText) ||
+      p.ingredients.some(i => i.toLowerCase().includes(searchText)) ||
+      p.scents.some(s => s.toLowerCase().includes(searchText))
+    );
+  }
+  
+  // ── Step 4: Availability filters ─────────────────────────
+  if (document.getElementById('inStockOnly')?.checked) {
+    results = results.filter(p => p.inStock);
+  }
+  if (document.getElementById('bestsellersOnly')?.checked) {
+    results = results.filter(p => p.isBestseller);
+  }
+  if (document.getElementById('newOnly')?.checked) {
+    results = results.filter(p => p.isNew);
+  }
+  
+  // ── Step 5: Sort ─────────────────────────────────────────
+  // Array.sort() with a compare function (a, b):
+  // Return negative → a comes before b
+  // Return positive → b comes before a
+  const sortValue = document.getElementById('sortSelect')?.value || 'default';
+  switch (sortValue) {
+    case 'price-low':
+      results.sort((a, b) => a.price - b.price); break;
+    case 'price-high':
+      results.sort((a, b) => b.price - a.price); break;
+    case 'rating':
+      results.sort((a, b) => b.rating - a.rating); break;
+    case 'name':
+      results.sort((a, b) => a.name.localeCompare(b.name)); break;
+    case 'discount':
+      results.sort((a, b) => {
+        const discA = ((a.originalPrice - a.price) / a.originalPrice);
+        const discB = ((b.originalPrice - b.price) / b.originalPrice);
+        return discB - discA;
+      }); break;
+  }
+  
+  // ── Step 6: Render results ───────────────────────────────
+  renderProducts(results);
+}
+
+/**
+ * renderProducts() — Renders an array of products to the grid
+ * @param {Array} products - Filtered & sorted products to show
+ */
+function renderProducts(products) {
+  const grid = document.getElementById('productsGrid');
+  const count = document.getElementById('productsCount');
+  if (!grid) return;
+  
+  // Update count text
+  if (count) {
+    count.textContent = `Showing ${products.length} product${products.length !== 1 ? 's' : ''}`;
+  }
+  
+  if (products.length === 0) {
+    grid.innerHTML = `
+      <div class="no-results" style="grid-column:1/-1;">
+        <div class="icon">🔍</div>
+        <h3>No soaps found</h3>
+        <p>Try adjusting your filters or search terms</p>
+        <button class="btn btn-outline" onclick="resetFilters()">Clear All Filters</button>
+      </div>
+    `;
+    return;
+  }
+  
+  grid.innerHTML = products.map(p => createProductCard(p)).join('');
+  
+  // Re-apply view mode to new cards
+  if (currentView === 'list') {
+    grid.classList.add('list-view');
+  }
+  
+  // Trigger scroll reveal
+  setTimeout(initScrollReveal, 50);
+}
+
+/**
+ * filterByCategory() — Called when category checkbox is clicked
+ * Maintains an array of active categories for multi-select.
+ */
+function filterByCategory(category, checkbox) {
+  if (category === 'all') {
+    // "All" selected: clear all others
+    activeCategories = [];
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      if (cb.id !== 'catAll') cb.checked = false;
+    });
+  } else {
+    // Uncheck "All" when specific category is selected
+    document.getElementById('catAll').checked = false;
+    
+    if (checkbox.checked) {
+      // Add to active categories
+      if (!activeCategories.includes(category)) {
+        activeCategories.push(category);
+      }
+    } else {
+      // Remove from active categories
+      activeCategories = activeCategories.filter(c => c !== category);
+    }
+  }
+  applyAllFilters();
+}
+
+/**
+ * filterByPrice() — Called when price slider moves
+ * Updates maxPrice and the label, then re-filters.
+ */
+function filterByPrice(value) {
+  maxPrice = parseInt(value);
+  document.getElementById('maxPriceLabel').textContent = '₹' + value;
+  applyAllFilters();
+}
+
+/**
+ * resetFilters() — Clears all filters back to default
+ */
+function resetFilters() {
+  activeCategories = [];
+  maxPrice = 600;
+  document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+  const rangeEl = document.getElementById('priceRange');
+  if (rangeEl) { rangeEl.value = 600; }
+  document.getElementById('maxPriceLabel').textContent = '₹600';
+  const searchEl = document.getElementById('searchInput');
+  if (searchEl) searchEl.value = '';
+  document.getElementById('sortSelect').value = 'default';
+  applyAllFilters();
+}
+
+/**
+ * setView() — Toggles between grid and list view
+ */
+function setView(view) {
+  currentView = view;
+  const grid = document.getElementById('productsGrid');
+  const gridBtn = document.getElementById('gridViewBtn');
+  const listBtn = document.getElementById('listViewBtn');
+  
+  if (view === 'list') {
+    grid.classList.add('list-view');
+    listBtn.classList.add('active');
+    gridBtn.classList.remove('active');
+  } else {
+    grid.classList.remove('list-view');
+    gridBtn.classList.add('active');
+    listBtn.classList.remove('active');
+  }
+}
+
+function checkURLParams() {
+  const params = new URLSearchParams(window.location.search);
+  
+  // Check for category parameter
+  const catParam = params.get('cat');
+  if (catParam && catParam !== 'all') {
+    // Find and check the matching checkbox
+    const checkbox = document.querySelector(`input[value="${catParam}"]`);
+    if (checkbox) {
+      checkbox.checked = true;
+      activeCategories = [catParam];
+    }
+  }
+  
+  // Check for search parameter
+  const searchParam = params.get('search');
+  if (searchParam) {
+    const searchEl = document.getElementById('searchInput');
+    if (searchEl) searchEl.value = searchParam;
+  }
+  
+  // Apply filters with detected params
+  applyAllFilters();
+}
+
+// Also connect navbar search to page search
+document.addEventListener('DOMContentLoaded', () => {
+  checkURLParams();
+  
+  // Sync navbar search with page search
+  const navInput = document.getElementById('navSearchInput');
+  const pageInput = document.getElementById('searchInput');
+  if (navInput && pageInput) {
+    navInput.addEventListener('input', () => {
+      pageInput.value = navInput.value;
+      applyAllFilters();
+    });
+  }
+});
+</script>
+<script src="enhance.js"></script>
+</body>
+</html>
