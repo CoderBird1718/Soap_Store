@@ -14,7 +14,7 @@ The project was designed as both a real-world learning resource and a deployable
 ## Live Demo
 
 ```
-
+ https://coderbird1718.github.io/Soap_Store/
 ```
 
 ---
