@@ -1,9 +1,6 @@
-# 🫧 LatherLux — Handmade Artisan Soap Store
+# LatherLux — Handmade Artisan Soap Store
 
 > A fully static, zero-dependency e-commerce front-end for a handmade soap brand — built with vanilla HTML, CSS & JavaScript.
-
-![LatherLux Preview](images/rose-garden.jpg)
-
 ---
 
 ## Overview
